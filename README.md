@@ -32,7 +32,7 @@
 **对任何AI Agent说**：
 ```
 帮我安装这个GitHub项目作为skill: 
-https://github.com/YOUR_USERNAME/debate-agent-toolkit
+https://github.com/yogurtNie/debate-assistant-cn.git
 ```
 
 AI会自动：

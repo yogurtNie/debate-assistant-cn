@@ -1,13 +1,12 @@
 # .gitignore
 
 # 个人数据
-debate-profiles/me-default/
-debate-profiles/test-*/
+profiles/me-default/
+profiles/test-*/
+profiles/*-private/
 
-# 原始资料
-debate/辩论通用资料/
-debate/data2/
-debate/cache/
+# 原始资料（如果从旧版本迁移）
+debate/
 *.docx
 *.pdf
 *.pptx
@@ -25,7 +24,8 @@ debate/cache/
 # 归档
 archive/
 
-# 临时文件
+# 缓存和临时文件
+.cache/
 *.tmp
 *.log
 *~
@@ -72,18 +72,20 @@ convert_docx.py
 extract_docx.sh
 *.汇报.md
 增量任务完成报告.md
-debate-style-learner自动化测试汇报.md
 
 # 测试中的具体稿件（保留测试框架）
-debate-tests/*/before/*.md
-debate-tests/*/after/*.md
-!debate-tests/*/topics.md
-!debate-tests/*/*-report.md
-!debate-tests/*/final-verdict.md
+tests/*/before/*.md
+tests/*/after/*.md
+!tests/*/topics.md
+!tests/*/*-report.md
+!tests/*/final-verdict.md
 
-# 旧版本处理记录
-debate/CHANGELOG.md
-debate/processing-progress.md
+# 本地配置
+config.local.yaml
+.env
+.env.local
 
-# 审计报告（本地）
+# 发布准备文件（本地）
 release-audit.md
+REFACTOR-PLAN.md
+RELEASE-COMPLETE.md

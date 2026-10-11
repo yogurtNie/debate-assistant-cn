@@ -1,98 +1,141 @@
 #!/usr/bin/env pwsh
-# Debate Skills 安装脚本 (Windows PowerShell)
-# 版本：v0.1.0
+# Debate Agent Toolkit 通用安装脚本 (Windows PowerShell)
+# 版本：v0.1.0-refactor
 
 $ErrorActionPreference = "Stop"
 
 Write-Host "==================================" -ForegroundColor Cyan
-Write-Host "  Debate Skills v0.1.0 安装程序" -ForegroundColor Cyan
+Write-Host "  Debate Agent Toolkit 安装程序" -ForegroundColor Cyan
 Write-Host "==================================" -ForegroundColor Cyan
 Write-Host ""
 
-# 检测 Claude skills 目录
+# 检测安装位置
+$TOOLKIT_HOME = $env:DEBATE_TOOLKIT_HOME
+if (-not $TOOLKIT_HOME) {
+    $TOOLKIT_HOME = "$env:APPDATA\debate-agent-toolkit"
+    Write-Host "使用默认安装位置: $TOOLKIT_HOME" -ForegroundColor Gray
+} else {
+    Write-Host "使用自定义安装位置: $TOOLKIT_HOME" -ForegroundColor Gray
+}
+
+# 检测平台
+Write-Host ""
+Write-Host "[1/6] 检测平台..." -ForegroundColor Yellow
 $CLAUDE_DIR = "$env:USERPROFILE\.claude"
-$SKILLS_DIR = "$CLAUDE_DIR\skills"
-$PROFILES_DIR = "$CLAUDE_DIR\debate-profiles"
-$KNOWLEDGE_DIR = "$CLAUDE_DIR\debate-knowledge"
+$CURSOR_DIR = "$env:USERPROFILE\.cursor"
+$PLATFORM = "generic"
+
+if (Test-Path "$CLAUDE_DIR\skills") {
+    $PLATFORM = "claude-code"
+    Write-Host "  检测到 Claude Code" -ForegroundColor Green
+} elseif (Test-Path $CURSOR_DIR) {
+    $PLATFORM = "cursor"
+    Write-Host "  检测到 Cursor" -ForegroundColor Green
+} else {
+    Write-Host "  未检测到特定平台，使用通用模式" -ForegroundColor Gray
+}
 
 # 创建目录
-Write-Host "[1/5] 检查 Claude 目录..." -ForegroundColor Yellow
-if (-not (Test-Path $CLAUDE_DIR)) {
-    New-Item -ItemType Directory -Path $CLAUDE_DIR | Out-Null
-    Write-Host "  已创建 $CLAUDE_DIR" -ForegroundColor Green
-}
-if (-not (Test-Path $SKILLS_DIR)) {
-    New-Item -ItemType Directory -Path $SKILLS_DIR | Out-Null
-    Write-Host "  已创建 $SKILLS_DIR" -ForegroundColor Green
-}
+Write-Host ""
+Write-Host "[2/6] 创建目录结构..." -ForegroundColor Yellow
+New-Item -ItemType Directory -Force -Path "$TOOLKIT_HOME\prompts" | Out-Null
+New-Item -ItemType Directory -Force -Path "$TOOLKIT_HOME\knowledge" | Out-Null
+New-Item -ItemType Directory -Force -Path "$TOOLKIT_HOME\profiles" | Out-Null
+New-Item -ItemType Directory -Force -Path "$TOOLKIT_HOME\.cache" | Out-Null
+Write-Host "  已创建 $TOOLKIT_HOME" -ForegroundColor Green
 
-Write-Host "[2/5] 安装 Skills..." -ForegroundColor Yellow
-$SKILLS = @("debate-prep", "debate-script-writer", "debate-material-pack", "debate-match-review", "debate-style-learner")
+# 安装 Prompts
+Write-Host ""
+Write-Host "[3/6] 安装 Prompts..." -ForegroundColor Yellow
+$PROMPTS = @("prep", "script-writer", "material-pack", "match-review", "style-learner")
 
-foreach ($skill in $SKILLS) {
-    $src = "skills\$skill"
-    $dest = "$SKILLS_DIR\$skill"
+foreach ($prompt in $PROMPTS) {
+    $src = "prompts\debate-$prompt"
+    $dest = "$TOOLKIT_HOME\prompts\debate-$prompt"
 
     if (Test-Path $dest) {
-        Write-Host "  $skill 已存在，是否覆盖？(y/n): " -NoNewline -ForegroundColor Yellow
+        Write-Host "  debate-$prompt 已存在，是否覆盖？(y/n): " -NoNewline -ForegroundColor Yellow
         $answer = Read-Host
         if ($answer -ne "y") {
-            Write-Host "  跳过 $skill" -ForegroundColor Gray
+            Write-Host "  跳过 debate-$prompt" -ForegroundColor Gray
             continue
         }
         Remove-Item -Recurse -Force $dest
     }
 
     Copy-Item -Recurse $src $dest
-    Write-Host "  已安装 $skill" -ForegroundColor Green
+    Write-Host "  已安装 debate-$prompt" -ForegroundColor Green
 }
 
-Write-Host "[3/5] 安装 Knowledge 库..." -ForegroundColor Yellow
-if (-not (Test-Path $KNOWLEDGE_DIR)) {
-    Copy-Item -Recurse "debate-knowledge" $KNOWLEDGE_DIR
-    Write-Host "  已安装到 $KNOWLEDGE_DIR" -ForegroundColor Green
+# 安装 Knowledge
+Write-Host ""
+Write-Host "[4/6] 安装 Knowledge..." -ForegroundColor Yellow
+if (-not (Test-Path "$TOOLKIT_HOME\knowledge\topics-index.md")) {
+    Copy-Item -Recurse "knowledge\*" "$TOOLKIT_HOME\knowledge\"
+    Write-Host "  已安装 Knowledge 库" -ForegroundColor Green
 } else {
-    Write-Host "  Knowledge 目录已存在，跳过" -ForegroundColor Gray
+    Write-Host "  Knowledge 已存在，跳过" -ForegroundColor Gray
 }
 
-Write-Host "[4/5] 安装示例 Profile..." -ForegroundColor Yellow
-if (-not (Test-Path $PROFILES_DIR)) {
-    New-Item -ItemType Directory -Path $PROFILES_DIR | Out-Null
-}
-$example_dest = "$PROFILES_DIR\example"
-if (-not (Test-Path $example_dest)) {
-    Copy-Item -Recurse "debate-profiles\example" $example_dest
+# 安装示例 Profile
+Write-Host ""
+Write-Host "[5/6] 安装示例 Profile..." -ForegroundColor Yellow
+if (-not (Test-Path "$TOOLKIT_HOME\profiles\example")) {
+    Copy-Item -Recurse "profiles\example" "$TOOLKIT_HOME\profiles\"
     Write-Host "  已安装示例 Profile" -ForegroundColor Green
 } else {
     Write-Host "  示例 Profile 已存在，跳过" -ForegroundColor Gray
 }
 
-Write-Host "[5/5] 验证安装..." -ForegroundColor Yellow
-$all_ok = $true
-foreach ($skill in $SKILLS) {
-    $skill_md = "$SKILLS_DIR\$skill\SKILL.md"
-    if (-not (Test-Path $skill_md)) {
-        Write-Host "  错误: $skill\SKILL.md 未找到" -ForegroundColor Red
-        $all_ok = $false
+# 复制配置文件
+if (-not (Test-Path "$TOOLKIT_HOME\config.yaml")) {
+    Copy-Item "config.yaml" "$TOOLKIT_HOME\config.yaml"
+    Write-Host "  已安装配置文件" -ForegroundColor Green
+}
+
+# 平台特定配置
+Write-Host ""
+Write-Host "[6/6] 平台适配..." -ForegroundColor Yellow
+
+if ($PLATFORM -eq "claude-code") {
+    Write-Host "  检测到 Claude Code，是否创建软链接？(y/n): " -NoNewline -ForegroundColor Yellow
+    $answer = Read-Host
+    if ($answer -eq "y") {
+        $SKILLS_DIR = "$CLAUDE_DIR\skills"
+        foreach ($prompt in $PROMPTS) {
+            $target = "$TOOLKIT_HOME\prompts\debate-$prompt"
+            $link = "$SKILLS_DIR\debate-$prompt"
+
+            if (Test-Path $link) {
+                Remove-Item -Force $link
+            }
+
+            # Windows 软链接需要管理员权限，这里使用目录连接（junction）
+            cmd /c mklink /J "$link" "$target" | Out-Null
+            Write-Host "  已链接 debate-$prompt 到 Claude Code" -ForegroundColor Green
+        }
     }
+} elseif ($PLATFORM -eq "cursor") {
+    Write-Host "  Cursor 支持开发中，请手动配置" -ForegroundColor Gray
 }
 
 Write-Host ""
-if ($all_ok) {
-    Write-Host "================================" -ForegroundColor Green
-    Write-Host "  安装成功！" -ForegroundColor Green
-    Write-Host "================================" -ForegroundColor Green
-    Write-Host ""
-    Write-Host "下一步：" -ForegroundColor Cyan
+Write-Host "================================" -ForegroundColor Green
+Write-Host "  安装成功！" -ForegroundColor Green
+Write-Host "================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "安装位置: $TOOLKIT_HOME" -ForegroundColor White
+Write-Host ""
+Write-Host "环境变量（可选）：" -ForegroundColor Cyan
+Write-Host "  setx DEBATE_TOOLKIT_HOME `"$TOOLKIT_HOME`"" -ForegroundColor Gray
+Write-Host ""
+Write-Host "下一步：" -ForegroundColor Cyan
+if ($PLATFORM -eq "claude-code") {
     Write-Host "  1. 打开 Claude Code" -ForegroundColor White
     Write-Host "  2. 对话：'我要准备辩题...'" -ForegroundColor White
-    Write-Host ""
-    Write-Host "可选配置：" -ForegroundColor Cyan
-    Write-Host "  - Profile 位置: $PROFILES_DIR" -ForegroundColor White
-    Write-Host "  - Knowledge 位置: $KNOWLEDGE_DIR" -ForegroundColor White
-    Write-Host ""
-    Write-Host "详细文档请查看 README.md" -ForegroundColor Gray
 } else {
-    Write-Host "安装过程中出现错误，请检查" -ForegroundColor Red
-    exit 1
+    Write-Host "  1. 查看 README.md 中的平台使用指南" -ForegroundColor White
+    Write-Host "  2. 配置您的 AI Agent 加载 $TOOLKIT_HOME\prompts" -ForegroundColor White
 }
+Write-Host ""
+Write-Host "详细文档: README.md" -ForegroundColor Gray

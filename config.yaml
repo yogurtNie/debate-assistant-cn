@@ -1,0 +1,42 @@
+# 配置文件
+
+# 安装位置配置
+# 默认会根据操作系统自动选择：
+# - Linux/macOS: ~/.local/share/debate-agent-toolkit/
+# - Windows: %APPDATA%\debate-agent-toolkit\
+#
+# 也可以通过环境变量覆盖：
+# export DEBATE_TOOLKIT_HOME="/custom/path"
+
+# 数据目录
+knowledge_dir: ${DEBATE_TOOLKIT_HOME}/knowledge
+profiles_dir: ${DEBATE_TOOLKIT_HOME}/profiles
+cache_dir: ${DEBATE_TOOLKIT_HOME}/.cache
+
+# 平台适配
+# 支持的平台：claude-code, cursor, openai-gpts, generic
+platform: auto  # auto会自动检测
+
+# Claude Code专用配置（可选）
+claude:
+  skills_dir: ~/.claude/skills
+  auto_link: true  # 是否自动创建软链接到.claude/skills
+
+# Cursor专用配置（可选）
+cursor:
+  rules_dir: ~/.cursor/rules
+  auto_link: true
+
+# API配置（可选，用于独立调用）
+api:
+  # ASR服务（match-review可选功能）
+  asr_provider: null  # whisper / azure / null
+  asr_api_key: ${DEBATE_ASR_API_KEY}
+
+# 功能开关
+features:
+  asr_enabled: false  # 语音识别功能
+  web_ui_enabled: false  # Web界面（未来）
+
+# 日志级别
+log_level: INFO  # DEBUG / INFO / WARNING / ERROR

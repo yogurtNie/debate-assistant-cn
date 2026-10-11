@@ -2,211 +2,151 @@
 
 **中文辩论备赛的AI Agent工具包 — 支持多平台、开箱即用**
 
+<div align="center">
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/YOUR_USERNAME/debate-agent-toolkit)
+[![Platform](https://img.shields.io/badge/platform-Claude%20%7C%20Cursor%20%7C%20LLM-green.svg)]()
+
+</div>
 
 ---
 
-## 一句话介绍
+## 🎯 这是什么？
 
-五个专项prompt帮助AI Agent写辩论稿、整理资料、复盘比赛、学习风格。通用内核与个人配置分离，支持Claude Code、Cursor及任何LLM Agent。
+五个专项AI prompt帮你：
+- ✍️ **写辩论稿** - 框架稿、逐字稿、质询稿、结辩稿
+- 📚 **整理资料** - 论点卡片、数据表、来源标注
+- 🎬 **复盘比赛** - 转录分析、战场复盘、改进建议
+- 🎨 **学习风格** - 从历史稿件自动提取个人风格
+- 🧭 **智能路由** - 自动判断你需要哪个工具
 
----
-
-## ✨ 特性
-
-- 🤖 **多平台支持**：Claude Code、Cursor、OpenAI GPTs、通用LLM Agent
-- 📚 **规则体系**：比较型/事实/判断型/政策辩论方法论，带来源和等级
-- 🎯 **按需加载**：智能路由，只加载当前任务需要的规则（节省token）
-- 🎨 **风格分离**：通用规则与个人风格独立配置
-- 📊 **数据真实**：所有数据必须有来源和年份，禁止编造
-- 🔄 **持续迭代**：基于实战测试，规则可验证可追溯
+通用内核与个人风格分离，所有规则带来源和等级，支持Claude Code、Cursor及任何LLM。
 
 ---
 
-## 🚀 快速开始
+## ⚡ 快速开始（3分钟）
 
-### 安装
+### 方法1：一键安装（最简单）
 
-**方法1：自动安装（推荐）**
-
+**Claude Code用户**：
 ```bash
-# macOS/Linux
-bash scripts/install.sh
-
-# Windows PowerShell
-.\scripts\install.ps1
+# 告诉Claude安装这个工具
+"帮我安装这个skill: https://github.com/YOUR_USERNAME/debate-agent-toolkit"
 ```
 
-**方法2：手动安装**
-
+**手动安装**：
 ```bash
 # 1. 克隆仓库
 git clone https://github.com/YOUR_USERNAME/debate-agent-toolkit.git
 cd debate-agent-toolkit
 
-# 2. 设置环境变量（可选）
-export DEBATE_TOOLKIT_HOME="$HOME/.local/share/debate-agent-toolkit"
-
-# 3. 复制文件
-mkdir -p $DEBATE_TOOLKIT_HOME
-cp -r prompts knowledge profiles config.yaml $DEBATE_TOOLKIT_HOME/
+# 2. 运行安装脚本（自动检测平台）
+bash scripts/install.sh        # macOS/Linux
+# 或
+.\scripts\install.ps1          # Windows
 ```
 
-### 平台配置
+安装脚本会：
+- ✅ 自动检测您的平台（Claude Code/Cursor/通用）
+- ✅ 安装到合适的位置
+- ✅ 创建必要的目录和配置
+- ✅ （Claude Code）自动创建软链接
 
-#### Claude Code
-安装脚本会自动创建软链接到`~/.claude/skills/`
+### 方法2：快速体验（不安装）
 
-#### Cursor
-将`prompts/`中的内容添加到Cursor的Rules（开发中）
+直接复制prompt内容到您的LLM：
 
-#### OpenAI GPTs
-将prompt内容作为Custom Instructions使用
-
-#### 通用LLM/API
 ```python
-# 示例：加载prompt并调用
+# 读取prompt
 with open('prompts/debate-script-writer/SKILL.md') as f:
-    system_prompt = f.read()
+    prompt = f.read()
 
-# 加载需要的规则
-with open('prompts/debate-script-writer/references/debate-types.md') as f:
-    rules = f.read()
-
-# 调用LLM
-response = llm.chat(
-    system=system_prompt + "\n\n" + rules,
-    user="我要写一篇关于'诚信比智慧更重要'的立论稿"
-)
+# 发送给任何LLM
+"我要写一篇关于'诚信比智慧更重要'的立论稿，正方，经典赛制"
 ```
 
 ---
 
-## 📖 使用示例
+## 🚀 使用示例
 
-### 场景1：写框架稿
-```
-对AI说：
-"我要准备辩题：诚信比智慧更重要，正方，经典赛制，请帮我写框架稿"
-```
+### 示例1：写立论稿（最常用）
 
-### 场景2：整理资料包
+**对话**：
 ```
-"我要为'时间能改变一切'这个辩题整理资料包，
-包括论点卡片和数据表"
+我要准备辩题：诚信比智慧更重要，正方，经典赛制，请帮我写框架稿
 ```
 
-### 场景3：复盘比赛
-```
-"我有一场比赛的转录文本，想做复盘分析"
-[提供转录文本]
-```
+**AI会自动**：
+1. 识别辩题类型（比较型价值辩）
+2. 加载对应规则（比较型四要点ABCD、五步流程）
+3. 生成框架稿，包含：
+   - 判准设置（可操作、能比较）
+   - 三个论点（每个都是"诚信vs智慧"的对比）
+   - 使用缺失性比较（"缺失诚信vs缺失智慧"）
+   - 预判对方5个论点及回应
 
-### 场景4：学习个人风格
-```
-"我想用 debate-style-learner 生成我的个人风格，
-我的历史稿件在 /path/to/my/debates/"
-```
+**输出示例**：
+```markdown
+# 立论框架稿
 
----
+## 判准
+以"社会信任体系的稳定性"为判准
 
-## 🛠️ 五个核心Prompts
+## 主线论证
+### 论点一：诚信是合作的前提，智慧是合作的工具
+- 诚信端：降低交易成本...
+- 智慧端：提高效率但无法建立信任...
+- 对比结论：在判准下，诚信是基础设施
 
-| Prompt | 功能 | 何时使用 |
-|--------|------|---------|
-| **debate-prep** | 路由入口，判断阶段并推荐prompt | 说"准备辩论"、不确定从哪开始 |
-| **debate-script-writer** | 写框架稿、逐字稿、质询稿、结辩稿 | 说"写稿"、"立论"、"质询" |
-| **debate-material-pack** | 整理资料包（论点卡片+数据表） | 说"收集资料"、"整理论点" |
-| **debate-match-review** | 复盘比赛录音/转录稿 | 说"复盘"、提供转录文本 |
-| **debate-style-learner** | 从历史稿件学习个人风格 | 说"学习风格"、"生成profile" |
+### 论点二：缺失性比较
+- 缺失诚信：社会陷入囚徒困境...
+- 缺失智慧：效率降低但合作仍可进行...
 
----
-
-## 🎨 个性化配置
-
-### 自动生成个人风格
-
-使用`debate-style-learner`从历史稿件自动生成profile：
-
-```bash
-# 提供历史稿件路径
-对AI说："我想生成我的个人风格，历史稿件在 /path/to/debates/"
+### 论点三：智慧的有效性依赖诚信
+...
 ```
 
-生成的profile包含：
-- 论证风格偏好
-- 语言习惯
-- 数据使用密度
-- 范例稿件
+### 示例2：整理资料包
 
-### Profile存放位置
-
-- 默认：`$DEBATE_TOOLKIT_HOME/profiles/`
-- 示例：`$DEBATE_TOOLKIT_HOME/profiles/example/`
-- 自定义：`$DEBATE_TOOLKIT_HOME/profiles/my-style/`
-
-### 多Profile管理
-
+**对话**：
 ```
-profiles/
-  example/          # 示例profile
-  formal-style/     # 正式风格
-  creative-style/   # 创新风格
-  me-default/       # 您的默认风格
+为'时间能改变一切'整理资料包，包括论点卡片和数据表
 ```
 
-使用时指定：
+**AI会生成**：
+- 📝 6张论点卡片（物质/生命/精神层面）
+- 📊 3张数据表（时间尺度对比）
+- 🔍 所有数据标注来源和年份
+- ⚠️ 未查证的标注【待核实】
+
+### 示例3：复盘比赛
+
+**对话**：
 ```
-"使用 formal-style 写一篇关于XXX的立论稿"
+我有一场比赛的转录文本，想做复盘分析
+[粘贴转录文本]
 ```
 
----
+**AI会分析**：
+- 战场识别（判准战场、需根解损等）
+- 攻防得失（哪些点赢了、哪些点输了）
+- 逻辑漏洞（循环论证、偷换概念等）
+- 改进建议（下次怎么打）
 
-## 🏗️ 设计原则
+### 示例4：学习你的风格
 
-### 1. 通用内核与个人配置分离
-- **通用内核**：辩论规则、辩题类型、论证方法（在`prompts/*/references/`）
-- **个人配置**：风格偏好、语言习惯（在`profiles/`）
-- **好处**：规则可共享和迭代，风格可个性化
+**对话**：
+```
+用debate-style-learner从我的历史稿件学习风格
+路径：/Users/me/debates/
+```
 
-### 2. 规则带来源与来源等级
-所有规则标注来源和等级：
-- **教材/课程级**（最高）：超辩学院、系统课程
-- **咨询群资料**（中）：辩论社群整理的方法论
-- **名家文章**（中）：知名辩手的经验分享
-- **实践总结**（低）：团队实战总结，待验证
-
-### 3. 数据真实性硬规则
-- 所有数据必须有来源和年份
-- 查不到的标注**【待核实】**
-- **禁止编造数据**
-
-### 4. 按需加载，节省Token
-- 路由设计：只加载当前任务需要的规则
-- 价值辩不加载政策辩规则，立论不加载质询规则
-- 平均每次对话加载<500行规则
-
----
-
-## 🌍 平台支持
-
-### 当前支持
-
-| 平台 | 状态 | 说明 |
-|------|------|------|
-| **Claude Code** | ✅ 完整支持 | 自动安装到`~/.claude/skills/` |
-| **通用LLM/API** | ✅ 完整支持 | 手动加载prompt和规则 |
-| **Cursor** | 🚧 开发中 | 手动配置Rules |
-| **OpenAI GPTs** | 🚧 开发中 | 作为Custom Instructions |
-| **LangChain/AutoGPT** | 📋 计划中 | Agent Tools适配 |
-
-### 通用使用方式
-
-即使不使用特定平台，您也可以：
-1. 将`prompts/*/references/`中的规则作为system prompt
-2. 手动组合规则文件发送给任何LLM
-3. 通过API调用（见`docs/api-usage.md`，开发中）
+**AI会提取**：
+- 论证风格偏好（理性型/升华型）
+- 语言习惯（句式、用词）
+- 数据密度（轻/中/重）
+- 自动生成profile，下次写稿时使用
 
 ---
 
@@ -214,54 +154,191 @@ profiles/
 
 ```
 debate-agent-toolkit/
-├── README.md                    # 本文档
-├── LICENSE                      # MIT License
-├── CHANGELOG.md                 # 版本更新日志
-├── config.yaml                  # 配置文件模板
-│
-├── prompts/                     # 核心Prompts（原skills）
-│   ├── debate-prep/
-│   ├── debate-script-writer/
-│   ├── debate-material-pack/
-│   ├── debate-match-review/
-│   └── debate-style-learner/
+├── prompts/                     # 5个核心Prompts
+│   ├── debate-prep/            # 路由入口
+│   ├── debate-script-writer/   # 写稿核心（10个规则文件）
+│   ├── debate-material-pack/   # 资料整理
+│   ├── debate-match-review/    # 比赛复盘
+│   └── debate-style-learner/   # 风格学习
 │
 ├── knowledge/                   # 知识库索引
-│   ├── topics-index.md
-│   ├── books-index.md
-│   └── *-theory.md
+│   ├── topics-index.md         # 辩题库索引
+│   ├── books-index.md          # 书籍要点
+│   └── *-theory.md             # 辩论理论
 │
-├── profiles/                    # Profile配置
-│   └── example/                 # 示例profile
+├── profiles/                    # 风格配置
+│   └── example/                # 示例profile
 │
-├── tests/                       # 测试记录
-│   └── README.md
+├── docs/platforms/              # 平台使用指南
+│   ├── claude-code.md          # Claude Code详细指南
+│   └── generic-llm.md          # 通用LLM/API使用
 │
-├── scripts/                     # 安装脚本
-│   ├── install.sh              # macOS/Linux
-│   └── install.ps1             # Windows
-│
-└── docs/                        # 文档（开发中）
-    ├── platforms/              # 各平台使用指南
-    └── api-usage.md            # API调用示例
+└── scripts/                     # 安装脚本
+    ├── install.sh              # macOS/Linux
+    └── install.ps1             # Windows
 ```
 
 ---
 
-## 🔧 配置
+## 🛠️ 五个核心工具
+
+### 1. debate-prep（路由入口）
+**何时用**：不确定该用哪个工具时  
+**功能**：分析你的需求，推荐合适的工具  
+
+### 2. debate-script-writer（写稿核心）
+**何时用**：需要写立论、质询、结辩稿时  
+**功能**：
+- 自动识别辩题类型（比较型/事实/政策）
+- 加载对应规则（只加载需要的，节省token）
+- 生成符合规范的框架稿
+- 数据全部标注来源
+
+**支持的辩题类型**：
+- ✅ 比较型价值辩（如"A比B重要"）
+- ✅ 判断型价值辩（如"X是美德"）
+- ✅ 事实辩（如"时间能改变一切"）
+- ✅ 政策辩（如"应该推行垃圾分类"）
+
+### 3. debate-material-pack（资料整理）
+**何时用**：需要系统整理资料时  
+**功能**：
+- 论点卡片（标准字段：论点/论据/数据/来源/年份）
+- 数据表（时间尺度、对比数据）
+- 评估维度（可信度/时效性/抗攻击性）
+
+**硬规则**：
+- ❌ 禁止编造数据
+- ✅ 必须标注来源和年份
+- ⚠️ 查不到的标注【待核实】
+
+### 4. debate-match-review（比赛复盘）
+**何时用**：有比赛录音或转录文本时  
+**功能**：
+- 战场识别和得失分析
+- 逻辑漏洞检查
+- 攻防效果评估
+- 改进建议
+
+**可选功能**：ASR语音识别（需配置API key）
+
+### 5. debate-style-learner（风格学习）
+**何时用**：想让AI学习你的写稿风格时  
+**功能**：
+- 分析历史稿件
+- 提取风格特征
+- 生成个人profile
+- 下次写稿时自动应用
+
+---
+
+## 🎨 个性化配置
+
+### 自动生成你的风格
+
+```
+对AI说：
+"用debate-style-learner从我的历史稿件学习风格，
+路径：/path/to/my/debates/"
+```
+
+生成的profile包含：
+```yaml
+# preferences.md
+论证风格: 理性论证为主
+语言风格: 通俗易懂，有画面感
+数据密度: 价值辩适中，事实辩较高
+
+# style-rules.md  
+开篇: 30秒内明确判准
+论点: 先结论后展开
+预判: 具体回应，不泛泛而谈
+
+# exemplars/
+[您的3-5篇范例稿件]
+```
+
+### 使用你的风格
+
+```
+"使用我的风格写一篇关于XXX的立论稿"
+```
+
+AI会自动加载`$DEBATE_TOOLKIT_HOME/profiles/me-default/`
+
+---
+
+## 🌍 平台支持
+
+### ✅ Claude Code（完整支持）
+
+安装脚本自动创建软链接到`~/.claude/skills/`，开箱即用。
+
+**验证**：
+```bash
+ls -la ~/.claude/skills/ | grep debate
+```
+
+**使用**：
+```
+# 直接对话
+"我要准备辩题..."
+```
+
+### ✅ 通用LLM/API（完整支持）
+
+手动加载prompt到任何LLM：
+
+```python
+# OpenAI
+import openai
+with open('prompts/debate-script-writer/SKILL.md') as f:
+    system = f.read()
+
+openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": system},
+        {"role": "user", "content": "写一篇立论稿..."}
+    ]
+)
+
+# Anthropic
+import anthropic
+client = anthropic.Anthropic()
+response = client.messages.create(
+    model="claude-3-5-sonnet-20241022",
+    system=system,
+    messages=[{"role": "user", "content": "写一篇立论稿..."}]
+)
+```
+
+详见：[docs/platforms/generic-llm.md](docs/platforms/generic-llm.md)
+
+### 🚧 Cursor（开发中）
+
+将`prompts/`内容添加到Cursor Rules（手动配置）
+
+### 🚧 OpenAI GPTs（开发中）
+
+作为Custom Instructions使用
+
+---
+
+## ⚙️ 配置
 
 ### 环境变量
 
 ```bash
-# 安装位置（可选，默认值见下）
+# 自定义安装位置（可选）
 export DEBATE_TOOLKIT_HOME="/custom/path"
 
-# 默认值：
+# 默认位置：
 # Linux/macOS: ~/.local/share/debate-agent-toolkit/
 # Windows: %APPDATA%\debate-agent-toolkit\
 
-# ASR API密钥（可选，match-review使用）
-export DEBATE_ASR_API_KEY="your-api-key"
+# ASR API（可选，match-review使用）
+export DEBATE_ASR_API_KEY="your-key"
 ```
 
 ### 配置文件
@@ -269,59 +346,119 @@ export DEBATE_ASR_API_KEY="your-api-key"
 编辑`$DEBATE_TOOLKIT_HOME/config.yaml`：
 
 ```yaml
-# 平台适配
+# 平台自动检测
 platform: auto  # auto / claude-code / cursor / generic
-
-# 目录配置
-knowledge_dir: ${DEBATE_TOOLKIT_HOME}/knowledge
-profiles_dir: ${DEBATE_TOOLKIT_HOME}/profiles
 
 # 功能开关
 features:
-  asr_enabled: false  # 语音识别功能
+  asr_enabled: false  # 语音识别（可选）
 ```
 
 ---
 
-## 📊 数据与来源说明
+## 🧪 规则体系
 
-### 规则来源
-本工具包中的规则为对公开辩论资料的要点提炼，均注明出处：
-- 超辩学院课程
-- 辩论咨询群整理资料
-- 名家公开文章和书籍
+### 设计原则
 
-### 资料使用
-- 本仓库**不含原始资料文件**（书籍、课程视频、PDF等）
-- 用户自己的资料**只在本地读取**，不上传
-- 生成的profile和稿件**仅存储在用户本地**
+1. **规则带来源和等级**
+   - 教材/课程级（最高）：超辩学院
+   - 咨询群资料（中）
+   - 实践总结（低，标注"待验证"）
 
-### 版权说明
-- 提炼的要点和规则遵循合理使用原则
-- 原始资料版权归原作者所有
-- 如有版权异议，请通过GitHub Issues联系我们
+2. **数据真实性硬规则**
+   - 必须有来源和年份
+   - 查不到标注【待核实】
+   - 禁止编造
+
+3. **按需加载**
+   - 价值辩不加载政策辩规则
+   - 立论不加载质询规则
+   - 平均每次加载<500行
+
+### 核心规则
+
+#### 比较型价值辩
+- **四要点ABCD**：标准与价值观、价值观因人而异、现状影响选择、标准可操作
+- **五步流程**：明确矛盾→寻找原因→制定标准→进行比较→得证
+- **缺失性比较**：对比"缺失A"vs"缺失B"哪个更糟
+- **来源**：咨询群资料《比较性辩题的通俗打法》
+
+#### 事实辩
+- **判准标准**：可验证、可观察（如"是否存在反例"）
+- **论证方法**：机制拆解+数据支撑+案例
+- **来源**：基于辩论理论推理
+
+#### 判断型价值辩
+- **判准标准**：明确"是/不是"的判定依据
+- **论证方法**：从定义/机制/本质三层论证
+- **来源**：马萌《价值辩论》
+
+#### 政策辩
+- **框架**：需根解损四战场
+- **论证方法**：需求性+根属性+解决力+损益比
+- **来源**：超辩学院课程
 
 ---
 
-## ⚠️ 已知局限
+## ❓ 常见问题
 
-### v0.1.0
+### Q: 我不用Claude Code，能用吗？
+**A**: 可以！支持任何LLM。将`prompts/`中的内容作为system prompt使用即可。详见[通用LLM使用指南](docs/platforms/generic-llm.md)。
 
-1. **平台支持**
-   - Claude Code：✅ 完整支持
-   - 其他平台：🚧 部分支持或开发中
+### Q: 数据从哪来？
+**A**: 工具本身不提供数据，只提供方法论。生成的稿件会标注【待核实】，您需要自己查证。
 
-2. **测试样本**
-   - 基于有限样本测试（2轮，10个辩题）
-   - 部分规则标注"待验证"
+### Q: 生成的稿件能直接用吗？
+**A**: 不能。这是**框架稿**，需要您：
+1. 查证所有【待核实】的数据
+2. 根据实际情况调整论点
+3. 加入个人风格和案例
 
-3. **书籍要点**
-   - 部分辩论书籍的详细要点提炼尚未完成
-   - 当前主要依赖课程和文章类资料
+### Q: 支持团队使用吗？
+**A**: 支持。每个成员安装到自己的电脑，可以：
+- 共享规则文件（knowledge/）
+- 各自维护个人profile（profiles/me-default/）
+- 协作整理资料包
 
-4. **ASR功能**
-   - `debate-match-review`的语音识别为可选功能
-   - 未配置时需用户提供转录文本
+### Q: 如何升级？
+**A**: 
+```bash
+cd debate-agent-toolkit
+git pull
+bash scripts/install.sh  # 重新安装
+```
+个人配置会自动保留。
+
+### Q: 安装失败怎么办？
+**A**: 检查：
+1. 是否有Git
+2. 是否有权限写入安装目录
+3. 查看错误信息中的具体问题
+4. 提交[GitHub Issue](https://github.com/YOUR_USERNAME/debate-agent-toolkit/issues)
+
+### Q: 我的prompt超过token限制了
+**A**: 使用路由加载，不要一次加载所有规则。工具会自动按需加载，平均<500行。
+
+---
+
+## 📊 测试与质量
+
+### 已测试辩题类型
+
+- ✅ 比较型价值辩（机遇vs奋斗、诚信vs智慧）
+- ✅ 哲学概念型（人性本善）
+- ✅ 判断型价值辩（中立是美德）
+- ✅ 事实辩（时间能改变一切）
+- ✅ 政策辩（垃圾分类）
+
+### 迭代测试
+
+**2轮测试，10个辩题**：
+- 第一轮：发现比较型辩题缺少"比较"结构 → 补充四要点ABCD
+- 第二轮：发现事实辩判准标准不明确 → 补充可验证标准
+- **最终通过率**：100%（必检项）
+
+详见：[tests/](tests/)
 
 ---
 
@@ -329,20 +466,20 @@ features:
 
 ### v0.2.0（开发中）
 - [ ] Cursor完整支持
-- [ ] OpenAI GPTs适配
+- [ ] OpenAI GPTs模板
 - [ ] 完善事实辩和政策辩规则
-- [ ] 更多辩题测试
+- [ ] 更多测试案例
 
-### v0.3.0（计划）
+### v0.3.0（计划中）
 - [ ] LangChain/AutoGPT适配
+- [ ] API封装
 - [ ] Web UI（可选）
-- [ ] API服务封装
-- [ ] 团队协作支持
+- [ ] 团队协作功能
 
 ### v1.0.0（长期）
-- [ ] 完整的多平台支持
 - [ ] 移动端支持
 - [ ] 多语言支持（英文辩论）
+- [ ] 完整的多平台支持
 
 ---
 
@@ -350,19 +487,8 @@ features:
 
 欢迎贡献！请查看[贡献指南](CONTRIBUTING.md)（开发中）
 
-### 报告问题
-- 使用GitHub Issues报告bug或提出功能建议
-- 提供复现步骤和相关日志
-
-### 贡献代码
-1. Fork本仓库
-2. 创建特性分支（`git checkout -b feature/your-feature`）
-3. 提交改动（`git commit -m 'Add some feature'`）
-4. 推送到分支（`git push origin feature/your-feature`）
-5. 创建Pull Request
-
 ### 贡献规则
-- 新增规则需标注来源和来源等级
+- 新增规则必须标注来源和等级
 - 数据必须有来源，查不到标注【待核实】
 - 遵循现有代码风格和目录结构
 
@@ -370,28 +496,30 @@ features:
 
 ## 📄 License
 
-MIT License - 详见[LICENSE](LICENSE)文件
+MIT License - 详见[LICENSE](LICENSE)
 
 ---
 
 ## 🙏 致谢
 
-感谢以下资源和社群：
-- 超辩学院系列课程
-- 各辩论咨询群的资料整理者
-- 名家辩手的公开分享
+- **超辩学院**系列课程
+- **辩论咨询群**资料整理者
+- **名家辩手**的公开分享
 - 所有参与测试和反馈的用户
 
 ---
 
-## 📞 联系方式
+## 📞 联系
 
 - **GitHub Issues**: [项目地址]/issues
 - **讨论区**: [项目地址]/discussions
 
 ---
 
-**版本**: v0.1.0  
-**最后更新**: 2026-10-11
+<div align="center">
 
-开始使用：运行安装脚本，然后对AI说"我要准备辩题"即可！
+**版本**: v0.1.0 | **更新**: 2026-10-11
+
+开始使用：`bash scripts/install.sh`
+
+</div>

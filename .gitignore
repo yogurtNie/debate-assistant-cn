@@ -1,0 +1,89 @@
+# .gitignore
+
+# 个人数据
+debate-profiles/me-default/
+debate-profiles/test-*/
+
+# 原始资料
+debate/辩论通用资料/
+debate/data2/
+debate/cache/
+*.docx
+*.pdf
+*.pptx
+*.ppt
+*.doc
+*.mp4
+*.mp3
+*.m4a
+*.flv
+*.wav
+*.zip
+*.rar
+*.7z
+
+# 归档
+archive/
+
+# 临时文件
+*.tmp
+*.log
+*~
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.egg-info/
+
+# Node
+node_modules/
+package-lock.json
+yarn.lock
+
+# 构建输出
+dist/
+build/
+*.egg
+
+# 测试覆盖
+.coverage
+htmlcov/
+.pytest_cache/
+
+# 系统文件
+*.bak
+*.orig
+
+# 临时工作文件
+convert_docx.py
+extract_docx.sh
+*.汇报.md
+增量任务完成报告.md
+debate-style-learner自动化测试汇报.md
+
+# 测试中的具体稿件（保留测试框架）
+debate-tests/*/before/*.md
+debate-tests/*/after/*.md
+!debate-tests/*/topics.md
+!debate-tests/*/*-report.md
+!debate-tests/*/final-verdict.md
+
+# 旧版本处理记录
+debate/CHANGELOG.md
+debate/processing-progress.md
+
+# 审计报告（本地）
+release-audit.md

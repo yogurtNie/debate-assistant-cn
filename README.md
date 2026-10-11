@@ -1,4 +1,4 @@
-# Debate Agent Toolkit
+# Debate Assistant
 
 **中文辩论备赛的AI Agent工具包 — 支持多平台、开箱即用**
 
@@ -56,8 +56,8 @@ npm install -g debate-agent-toolkit
 **使用脚本**：
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/YOUR_USERNAME/debate-agent-toolkit.git
-cd debate-agent-toolkit
+git clone https://github.com/yogurtNie/debate-assistant-cn.git
+cd debate-assistant-cn
 
 # 2. 运行安装脚本（自动检测平台）
 bash scripts/install.sh        # macOS/Linux
@@ -425,15 +425,6 @@ features:
 ### Q: 我不用Claude Code，能用吗？
 **A**: 可以！支持任何LLM。将`prompts/`中的内容作为system prompt使用即可。详见[通用LLM使用指南](docs/platforms/generic-llm.md)。
 
-### Q: 数据从哪来？
-**A**: 工具本身不提供数据，只提供方法论。生成的稿件会标注【待核实】，您需要自己查证。
-
-### Q: 生成的稿件能直接用吗？
-**A**: 不能。这是**框架稿**，需要您：
-1. 查证所有【待核实】的数据
-2. 根据实际情况调整论点
-3. 加入个人风格和案例
-
 ### Q: 支持团队使用吗？
 **A**: 支持。每个成员安装到自己的电脑，可以：
 - 共享规则文件（knowledge/）
@@ -456,12 +447,12 @@ bash scripts/install.sh  # 重新安装
 3. 是否有权限写入安装目录
 4. 尝试手动安装：`bash scripts/install.sh`
 5. 查看错误信息中的具体问题
-6. 提交[GitHub Issue](https://github.com/YOUR_USERNAME/debate-agent-toolkit/issues)
+6. 提交[GitHub Issue](https://github.com/yogurtNie/debate-assistant-cn/issues)
 
 ### Q: Codex/其他AI能自动安装吗？
 **A**: 可以！只需告诉AI：
 ```
-帮我安装这个GitHub项目: https://github.com/YOUR_USERNAME/debate-agent-toolkit
+帮我安装这个GitHub项目skills: https://github.com/yogurtNie/debate-assistant-cn.git
 ```
 AI会自动克隆仓库并运行安装脚本。我们提供了：
 - ✅ `install.js` - Node.js跨平台安装脚本
@@ -471,27 +462,6 @@ AI会自动克隆仓库并运行安装脚本。我们提供了：
 
 ### Q: 我的prompt超过token限制了
 **A**: 使用路由加载，不要一次加载所有规则。工具会自动按需加载，平均<500行。
-
----
-
-## 📊 测试与质量
-
-### 已测试辩题类型
-
-- ✅ 比较型价值辩（机遇vs奋斗、诚信vs智慧）
-- ✅ 哲学概念型（人性本善）
-- ✅ 判断型价值辩（中立是美德）
-- ✅ 事实辩（时间能改变一切）
-- ✅ 政策辩（垃圾分类）
-
-### 迭代测试
-
-**2轮测试，10个辩题**：
-- 第一轮：发现比较型辩题缺少"比较"结构 → 补充四要点ABCD
-- 第二轮：发现事实辩判准标准不明确 → 补充可验证标准
-- **最终通过率**：100%（必检项）
-
-详见：[tests/](tests/)
 
 ---
 
@@ -544,8 +514,9 @@ MIT License - 详见[LICENSE](LICENSE)
 
 ## 📞 联系
 
-- **GitHub Issues**: [项目地址]/issues
-- **讨论区**: [项目地址]/discussions
+- **GitHub Issues**: [\[项目地址\]](https://github.com/yogurtNie/debate-assistant-cn)/issues
+- **讨论区**: [\[项目地址\]](https://github.com/yogurtNie/debate-assistant-cn)/discussions
+- **开发者邮箱**: yige_nie AT mail DOT sdu DOT edu DOT cn
 
 ---
 

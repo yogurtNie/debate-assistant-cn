@@ -62,6 +62,7 @@ build/
 .coverage
 htmlcov/
 .pytest_cache/
+tests/
 
 # 系统文件
 *.bak

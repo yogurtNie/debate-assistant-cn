@@ -1,0 +1,118 @@
+{
+  "name": "debate-agent-toolkit",
+  "version": "0.1.0",
+  "description": "中文辩论备赛的AI Agent工具包",
+  "skills": [
+    {
+      "name": "debate-prep",
+      "description": "辩论备赛路由入口，判断当前阶段并引导至相应工具",
+      "path": "prompts/debate-prep",
+      "triggers": ["准备辩题", "辩论", "不确定从哪开始"],
+      "category": "routing"
+    },
+    {
+      "name": "debate-script-writer",
+      "description": "写辩论框架稿、逐字稿、质询稿、结辩稿",
+      "path": "prompts/debate-script-writer",
+      "triggers": ["写稿", "立论", "质询", "结辩", "框架稿"],
+      "category": "writing",
+      "features": [
+        "比较型价值辩",
+        "事实辩",
+        "判断型价值辩",
+        "政策辩"
+      ]
+    },
+    {
+      "name": "debate-material-pack",
+      "description": "整理辩论资料包（论点卡片+数据表）",
+      "path": "prompts/debate-material-pack",
+      "triggers": ["收集资料", "整理论点", "数据表", "资料包"],
+      "category": "research"
+    },
+    {
+      "name": "debate-match-review",
+      "description": "复盘比赛录音或转录稿",
+      "path": "prompts/debate-match-review",
+      "triggers": ["复盘", "比赛录音", "转录", "分析比赛"],
+      "category": "analysis",
+      "optional_features": ["ASR语音识别"]
+    },
+    {
+      "name": "debate-style-learner",
+      "description": "从历史稿件学习个人辩论风格",
+      "path": "prompts/debate-style-learner",
+      "triggers": ["学习风格", "生成profile", "个人风格"],
+      "category": "personalization"
+    }
+  ],
+  "platforms": {
+    "claude-code": {
+      "supported": true,
+      "installation": "auto-symlink",
+      "target_dir": "~/.claude/skills/"
+    },
+    "cursor": {
+      "supported": "development",
+      "installation": "manual",
+      "target_dir": "~/.cursor/rules/"
+    },
+    "generic": {
+      "supported": true,
+      "installation": "manual",
+      "usage": "Load prompts as system prompts"
+    }
+  },
+  "installation": {
+    "methods": [
+      {
+        "name": "npx",
+        "command": "npx skills add YOUR_USERNAME/debate-agent-toolkit",
+        "supported": true
+      },
+      {
+        "name": "npm",
+        "command": "npm install -g debate-agent-toolkit",
+        "supported": true
+      },
+      {
+        "name": "script",
+        "command": "bash scripts/install.sh",
+        "supported": true
+      },
+      {
+        "name": "git-clone",
+        "command": "git clone && cd debate-agent-toolkit && npm install",
+        "supported": true
+      }
+    ],
+    "default_location": {
+      "linux": "~/.local/share/debate-agent-toolkit/",
+      "macos": "~/Library/Application Support/debate-agent-toolkit/",
+      "windows": "%APPDATA%\\debate-agent-toolkit\\"
+    }
+  },
+  "dependencies": {
+    "git": ">=2.0.0",
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/debate-agent-toolkit.git"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/debate-agent-toolkit#readme",
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/debate-agent-toolkit/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "debate",
+    "chinese",
+    "agent",
+    "claude",
+    "cursor",
+    "llm",
+    "ai-skills",
+    "debate-toolkit"
+  ]
+}

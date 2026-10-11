@@ -1,0 +1,36 @@
+{
+  "name": "debate-agent-toolkit",
+  "version": "0.1.0",
+  "description": "中文辩论备赛的AI Agent工具包 - 支持多平台、开箱即用",
+  "author": "YOUR_USERNAME",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/debate-agent-toolkit.git"
+  },
+  "keywords": [
+    "debate",
+    "chinese",
+    "agent",
+    "claude",
+    "cursor",
+    "llm",
+    "ai-toolkit"
+  ],
+  "scripts": {
+    "install": "node install.js",
+    "postinstall": "node install.js",
+    "test": "echo \"Tests in tests/ directory\""
+  },
+  "bin": {
+    "debate-toolkit": "./scripts/cli.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ]
+}

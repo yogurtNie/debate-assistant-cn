@@ -27,15 +27,33 @@
 
 ## ⚡ 快速开始（3分钟）
 
-### 方法1：一键安装（最简单）
+### 方法1：AI自动安装（最简单）
 
-**Claude Code用户**：
-```bash
-# 告诉Claude安装这个工具
-"帮我安装这个skill: https://github.com/YOUR_USERNAME/debate-agent-toolkit"
+**对任何AI Agent说**：
+```
+帮我安装这个GitHub项目作为skill: 
+https://github.com/YOUR_USERNAME/debate-agent-toolkit
 ```
 
-**手动安装**：
+AI会自动：
+- ✅ 克隆仓库
+- ✅ 检测您的平台
+- ✅ 运行安装脚本
+- ✅ 创建软链接（如果是Claude Code）
+
+### 方法2：命令行安装
+
+**使用npx（推荐）**：
+```bash
+npx debate-agent-toolkit install
+```
+
+**使用npm**：
+```bash
+npm install -g debate-agent-toolkit
+```
+
+**使用脚本**：
 ```bash
 # 1. 克隆仓库
 git clone https://github.com/YOUR_USERNAME/debate-agent-toolkit.git
@@ -45,9 +63,11 @@ cd debate-agent-toolkit
 bash scripts/install.sh        # macOS/Linux
 # 或
 .\scripts\install.ps1          # Windows
+# 或
+node install.js                # 跨平台Node.js
 ```
 
-安装脚本会：
+**安装完成后**：
 - ✅ 自动检测您的平台（Claude Code/Cursor/通用）
 - ✅ 安装到合适的位置
 - ✅ 创建必要的目录和配置
@@ -431,10 +451,23 @@ bash scripts/install.sh  # 重新安装
 
 ### Q: 安装失败怎么办？
 **A**: 检查：
-1. 是否有Git
-2. 是否有权限写入安装目录
-3. 查看错误信息中的具体问题
-4. 提交[GitHub Issue](https://github.com/YOUR_USERNAME/debate-agent-toolkit/issues)
+1. 是否有Git（`git --version`检查）
+2. 是否有Node.js（如果用npm安装，`node --version`检查）
+3. 是否有权限写入安装目录
+4. 尝试手动安装：`bash scripts/install.sh`
+5. 查看错误信息中的具体问题
+6. 提交[GitHub Issue](https://github.com/YOUR_USERNAME/debate-agent-toolkit/issues)
+
+### Q: Codex/其他AI能自动安装吗？
+**A**: 可以！只需告诉AI：
+```
+帮我安装这个GitHub项目: https://github.com/YOUR_USERNAME/debate-agent-toolkit
+```
+AI会自动克隆仓库并运行安装脚本。我们提供了：
+- ✅ `install.js` - Node.js跨平台安装脚本
+- ✅ `skills.json` - Skills元数据（AI可解析）
+- ✅ `package.json` - npm支持
+- ✅ 自动平台检测和配置
 
 ### Q: 我的prompt超过token限制了
 **A**: 使用路由加载，不要一次加载所有规则。工具会自动按需加载，平均<500行。
